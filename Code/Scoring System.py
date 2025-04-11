@@ -78,3 +78,12 @@ df1['Heart Failure Score'] = np.select(conditions, scores, default=0)
 print(df1[['LeftVentricularFunction', 'Heart Failure Score']].head())
 print(df1['Heart Failure Score'].unique())
 # %%
+#Previous Cardiac Surgery Score
+conditions = [
+    (df1.PreviousCardiacSurgery != 0)
+]
+scores = [1]
+df1['Previous Cardiac Surgery Score'] = np.select(conditions, scores, default=0)
+print(df1[['PreviousCardiacSurgery', 'Previous Cardiac Surgery Score']].head())
+print(df1['Previous Cardiac Surgery Score'].unique())
+# %%
