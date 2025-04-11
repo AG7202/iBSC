@@ -80,10 +80,51 @@ print(df1['Heart Failure Score'].unique())
 # %%
 #Previous Cardiac Surgery Score
 conditions = [
-    (df1.PreviousCardiacSurgery != 0)
+    (df1.PreviousCardiacSurgery != '0')
 ]
 scores = [1]
 df1['Previous Cardiac Surgery Score'] = np.select(conditions, scores, default=0)
 print(df1[['PreviousCardiacSurgery', 'Previous Cardiac Surgery Score']].head())
 print(df1['Previous Cardiac Surgery Score'].unique())
+# %%
+#Urgent Surgery Score
+conditions = [
+    (df1.OperativeUrgency != 'Elective')
+]
+scores = [1]
+df1['Urgent Surgery Score'] = np.select(conditions, scores, default=0)
+print(df1[['OperativeUrgency', 'Urgent Surgery Score']].head())
+print(df1['Urgent Surgery Score'].unique())
+# %%
+#Amiodorone Score
+#conditions = [
+ #   (df1.drugs != 'Amiodorone Key Number')
+#]
+#scores = [2]
+#df1['Amiodorone Score'] = np.select(conditions, scores, default=0)
+#print(df1[['drugs', 'Amiodorone Score']].head())
+#print(df1['Amiodorone Score'].unique())
+# %%
+#Beta-blocker score
+df1['BBFlag'] = df1['DrugsOnAdmission'].str.contains('5')
+df1['BB Score'] = np.where(df1['BBFlag'] == True, -1, 0)
+print(df1[['DrugsOnAdmission', 'BB Score']].head())
+# %%
+#Type of Surgery Score
+conditions = [
+   (df1.Cabg == 'No') & (df1.Valve == 'No'),
+   (df1.Cabg == 'Yes') & (df1.Valve == 'No'),
+   (df1.Cabg == 'No') & (df1.Valve == 'Yes'),
+   (df1.Cabg == 'Yes') & (df1.Valve == 'Yes')
+]
+scores = [0, 1, 0, 3]
+df1['Type of Surgery Score'] = np.select(conditions, scores)
+print(df1[['Cabg', 'Valve', 'Type of Surgery Score']].head())
+# %%
+#Calculate final score
+df1['Final Score'] = (df1['Age Score'] + df1['Cumulative Bypass Time Score'] + df1['Sex Score'] + df1['Dialysis Score'] +
+                    df1['Surgery Type Score'] + df1['Heart Failure Score'] + df1['Previous Cardiac Surgery Score'] +
+                    df1['Urgent Surgery Score'] + df1['BB Score']) #+ Liver disease score + Amiodarone score
+
+print(df1['Final Score'].head())
 # %%
