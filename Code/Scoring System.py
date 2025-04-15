@@ -127,4 +127,17 @@ df1['Final Score'] = (df1['Age Score'] + df1['Cumulative Bypass Time Score'] + d
                     df1['Urgent Surgery Score'] + df1['BB Score']) #+ Liver disease score + Amiodarone score
 
 print(df1['Final Score'].head())
+#%%
+#Categorise into low, medium and high risk
+conditions = [
+    (df1['Final Score'] < 3),
+    (df1['Final Score'] >= 3) & (df1['Final Score'] <= 6),
+    (df1['Final Score'] > 6)
+]
+scores = [1,2,3] #1 = Low, 2 = Moderate, 3 = High
+df1['Risk'] = np.select(conditions, scores)
+print(df1[['Final Score', 'Risk']].head())
+print(df1['Risk'].unique())
 # %%
+#Create new excel file with scores added
+df1.to_excel('Demographics with Risk Score.xlsx', index=False)
